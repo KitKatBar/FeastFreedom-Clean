@@ -1,0 +1,54 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:th="http://www.thymeleaf.org">
+<head>
+<meta charset="utf-8"/>
+<title>Select Kitchen</title>
+<link rel="stylesheet" type="text/css" th:href="@{/css/header.css}" />
+</head>
+<body>
+	<div class="topnav">
+		<div sec:authorize="isAuthenticated()"><a class="active" th:href="@{/logout}">Logout</a></div>
+		<a th:href="@{/user_homepage}">Homepage</a>
+		<a th:href="@{/user_view_cart}">View Cart</a>
+		<a href="#user">Welcome <span th:text="${user.name}"></span></a>
+	</div>
+	<div align="center">
+    <h1>Choose A Kitchen To Order From</h1>
+    
+    <br/><br/>
+    <table border="1" cellpadding="10">
+        <thead>
+            <tr>
+                <th>#</th>
+                <th>Kitchen Name</th>
+                <th>Contact Info</th>
+                <th>Actions</th>
+            </tr>
+        </thead>
+        <tbody>
+            <tr th:each="kitchen : ${kitchens}">
+            	<td th:text="${kitchen.id}">#</td>
+                <td th:text="${kitchen.name}">Kitchen Name</td>
+                <td th:text="${kitchen.email}">Contact Info</td>
+              
+                <td>
+                	<a th:href="@{/user_order_kitchen/{id}(id=${kitchen.id})}">Order Here</a>
+                </td>
+            </tr>
+            
+        </tbody>
+    </table>
+</div> 
+
+<div align="center">
+		<h2>Your Information</h2>
+		<span>Full name:</span><span th:text="${user.name}"></span><br/>
+		<span>E-mail:</span><span th:text="${user.email}"></span><br/>
+		<span>PhoneNumber:</span><span th:text="${user.phone}"></span><br/>	
+		
+		
+</div>
+   
+</body>
+</html>

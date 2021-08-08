@@ -1,0 +1,38 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+<meta charset="ISO-8859-1">
+<title>Registration Success</title>
+<style type="text/css">
+	span {
+		display: inline-block;
+		width: 200px;
+		text-align: left;
+	}
+</style>
+</head>
+<body>
+	<div align="center">
+		<h2>Add Succeeded!</h2>
+		          
+		<span>Name:</span><span th:text="${product.name}"></span><br/>
+		<span>Price:</span><span th:text="${product.price}"></span><br/>
+		
+		
+		<span>UserName:</span><span th:text="${user.name}"></span><br/>
+		<span>Email:</span><span th:text="${user.email}"></span><br/>
+		<span>Cost:</span><span th:text="${user.cost}"></span><br/>
+	
+	    
+	
+		<h1> Please View Your Cart</h1>
+					
+	</div>
+         
+	<div align="center">
+		
+		<a href="order">Click here to mannual</a>
+	</div>
+
+</body>
+</html>

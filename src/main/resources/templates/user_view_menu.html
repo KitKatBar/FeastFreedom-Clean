@@ -1,0 +1,59 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:th="http://www.thymeleaf.org">
+<head>
+<meta charset="utf-8"/>
+<title>Order Menu</title>
+<link rel="stylesheet" type="text/css" th:href="@{/css/header.css}" />
+</head>
+<body>
+	<div class="topnav">
+		<div sec:authorize="isAuthenticated()"><a class="active" th:href="@{/logout}">Logout</a></div>
+		<a th:href="@{/user_homepage}">Homepage</a>
+		<a th:href="@{/user_view_cart}">View Cart</a>
+		<a href="#user">Welcome <span th:text="${user.name}"></span></a>
+	</div>
+<div align="center">
+	<div th:if="${param.added}">
+		<div class="alert alert-info">Item added to cart!</div>
+	</div>
+    <h1>Add Items To Your Cart</h1>
+    
+    <br/><br/>
+    <table border="1" cellpadding="10">
+        <thead>
+            <tr>
+                <th>Item #</th>
+                <th>Item Name</th>
+                <th>Veg?</th>
+                <th>Price</th>
+                <th>Actions</th>
+            </tr>
+        </thead>
+        <tbody>
+            <tr th:each="menu : ${items}">
+            	<td th:text="${menu.id}">Item #</td>
+                <td th:text="${menu.itemName}">Item Name</td>
+                <td th:text="${menu.veg}">Veg?</td>
+                <td th:text="${menu.price}">Price</td>
+              
+                <td>
+                	<a th:href="@{/add_cart_item/{id}(id=${menu.id})}">Add Item</a>
+                </td>
+            </tr>
+            
+        </tbody>
+    </table>
+</div> 
+
+<div align="center">
+		<h2>Your Information</h2>
+		<span>Full name:</span><span th:text="${user.name}"></span><br/>
+		<span>E-mail:</span><span th:text="${user.email}"></span><br/>
+		<span>PhoneNumber:</span><span th:text="${user.phone}"></span><br/>	
+		
+		
+</div>
+   
+</body>
+</html>

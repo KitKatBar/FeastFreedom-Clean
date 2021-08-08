@@ -1,0 +1,31 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org"
+	xmlns:sec="http://www.thymeleaf.org/thymeleaf-extras-springsecurity3">
+<head>
+<meta charset="ISO-8859-1">
+<title>Index</title>
+<link rel="stylesheet" type="text/css" th:href="@{/css/header.css}" />
+</head>
+<body>
+	<div class="topnav">
+		<div sec:authorize="isAnonymous()"><a class="active" th:href="@{/login}">Login</a></div>
+		<!-- <div sec:authorize="isAnonymous()"><a class="active" th:href="@{/kitchen_login}">Kitchen Login</a></div> -->
+		<div sec:authorize="isAnonymous()"><a th:href="@{/kitchen_registration}">Kitchen Registration</a></div>
+		<!-- <div sec:authorize="isAnonymous()"><a class="active" th:href="@{/user_login}">User Login</a></div> -->
+		<div sec:authorize="isAnonymous()"><a th:href="@{/user_registration}">User Registration</a></div>
+		<!-- <div sec:authorize="isAuthenticated()"><a class="active" th:href="@{/logout}">Logout</a></div>  -->
+	</div>
+	<br>
+	<table>
+		<tr>Feast Freedom App<tr>
+		</tr>
+	</table>
+	<br>
+	<div th:if="${param.success}">
+		<div class="alert alert-info">You've successfully registered!</div>
+	</div>
+	<div th:if="${param.logout}">
+		<div class="alert alert-info">You have been logged out.</div>
+	</div>
+</body>
+</html>

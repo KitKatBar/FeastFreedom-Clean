@@ -1,0 +1,16 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+<meta charset="ISO-8859-1">
+<title>User Homepage</title>
+<link rel="stylesheet" type="text/css" th:href="@{/css/header.css}" />
+</head>
+<body>
+	<div class="topnav">
+		<div sec:authorize="isAuthenticated()"><a class="active" th:href="@{/logout}">Logout</a></div>
+		<a th:href="@{/user_order_kitchen}">Order Food</a>
+		<a th:href="@{/user_view_cart}">View Cart</a>
+				<a href="#user">Welcome <span th:text="${user.name}"></span></a>
+	</div>
+</body>
+</html>

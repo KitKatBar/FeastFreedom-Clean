@@ -1,0 +1,103 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+<meta charset="ISO-8859-1">
+<title>Register Here</title>
+<link rel="stylesheet" type="text/css" th:href="@{/css/header.css}" />
+</head>
+<body>
+	<div class="topnav">
+		<a class="active" th:href="@{/kitchen_settings}">Kitchen Settings</a>
+		<a th:href="@{/view_menu}">View Menu</a> <a th:href="@{/edit_menu}">Edit
+			Menu</a> <a href="#kitchen"><span th:text="${kitchen.name}"></span></a>
+		<div sec:authorize="isAuthenticated()"><a th:href="@{/logout}">Logout</a></div>
+	</div>
+	<div th:if="${param.saved}">
+		<div class="alert alert-info">Settings saved!</div>
+	</div>
+	<form th:action="@{/kitchen_settings}" th:object="${kitchen}"
+		method="post">
+
+		<p class="error-message" th:if="${#fields.hasGlobalErrors()}"
+			th:each="error : ${#fields.errors('global')}" th:text="${error}">Validation
+			error</p>
+		<h2>Kitchen Working Days</h2>
+		<div>
+			<span> <input id="daysOpen1" name="daysOpen" type="checkbox"
+				value="Monday" /> <label for="daysOpen1">Monday</label>
+			</span> <span> <input id="daysOpen2" name="daysOpen" type="checkbox"
+				value="Tuesday" /> <label for="daysOpen2">Tuesday</label>
+			</span> <span> <input id="daysOpen3" name="daysOpen" type="checkbox"
+				value="Wednesday" /> <label for="daysOpen3">Wednesday</label>
+			</span> 
+			<span> <input id="daysOpen4" name="daysOpen" type="checkbox"
+				value="Thursday" /> <label for="daysOpen4">Thursday</label>
+			</span> 
+			<span> <input id="daysOpen5" name="daysOpen" type="checkbox"
+				value="Friday" /> <label for="daysOpen5">Friday</label>
+			</span>
+			<span> <input id="daysOpen6" name="daysOpen" type="checkbox"
+				value="Saturday" /> <label for="daysOpen6">Saturday</label>
+			</span>
+			<span> <input id="daysOpen7" name="daysOpen" type="checkbox"
+				value="Sunday" /> <label for="daysOpen7">Sunday</label>
+			</span>
+			
+			<input type="hidden" name="_daysOpen" value="on" />
+
+
+		</div>
+		<br>
+		<h2>Kitchen Hours</h2>
+		<div>
+		<label>Start Time</label>
+			<select th:field="*{startTime}">
+          		<option th:each="s : ${listStartTime}" th:value="${s}" th:text="${s}" />
+        	</select>
+        <label>End Time</label>
+			<select th:field="*{endTime}">
+          		<option th:each="e : ${listEndTime}" th:value="${e}" th:text="${e}" />
+        	</select>
+			
+			
+			
+			<!--  <label>Start time</label> <select id="starttime" name="starttime">
+				<option th:each="i : ${#numbers.sequence(1, 24)}" th:value="${kitchen.starttime}" th:text="${i}"></option>
+			</select> 
+			
+			<label>End time</label> <select id="endtime" name="endtime">
+			<option th:each="i : ${#numbers.sequence(1, 24)}" th:value="${kitchen.endtime}" th:text="${i}"></option>
+			</select>
+			-->
+		</div>
+		<br>
+		<h2>Kitchen Menu</h2>
+		<!-- <table>
+			<tr>Menu Items</tr>
+			<tr th:each="menu : ${items}">
+
+				<td><a th:href="@{/list_items/{id}(id=${menu.id})}"
+					th:text="${menu.itemName}"></a></td>
+			</tr>
+		</table> -->
+		<div class="form-group">
+			<a th:href="@{/view_menu}"><button type="button">View
+					Menu</button></a> <a th:href="@{/edit_menu}"><button type="button">Edit
+					Menu</button></a>
+		</div>
+		<a href="/kitchen_settings"><button type="submit"
+				class="btn btn-success">Save</button></a>
+	</form>
+	<br>
+	<div>
+		<form th:action="@{/kitchen/save}" th:object="${kitchen}"
+			method="post" enctype="multipart/form-data">
+			<label for="imageURL">Choose a profile picture for your
+				Kitchen:</label> <br> <input type="file" name="imageURL"
+				accept="image/png, image/jpeg" />
+		</form>
+	</div>
+	<br>
+	
+</body>
+</html>

@@ -1,0 +1,75 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+<meta charset="ISO-8859-1">
+<title>Confirm Order</title>
+<link rel="stylesheet" type="text/css" th:href="@{/css/header.css}" />
+<style type="text/css">
+	span {
+		display: inline-block;
+		width: 200px;
+		text-align: left;
+	}
+</style>
+</head>
+<body>
+	<div class="topnav">
+		<div sec:authorize="isAuthenticated()"><a class="active" th:href="@{/logout}">Logout</a></div>
+		<a th:href="@{/user_homepage}">Homepage</a>
+		<a th:href="@{/user_order_kitchen}">Order Food</a>
+		<a href="#user">Welcome <span th:text="${user.name}"></span></a>
+	</div>
+	<div align="center">
+	<div th:if="${param.deleted}">
+		<div class="alert alert-info">Item added to cart!</div>
+	</div>
+		<h2>Please review your cart!</h2>
+		<h2>Cart Items</h2>
+	<br/><br/>
+    <table border="1" cellpadding="10">
+        <thead>
+            <tr>
+                <th>#</th>
+                <th>Item Name</th>
+                <th>Price</th>
+                <th>Actions</th>
+            </tr>
+        </thead>
+        <tbody>
+            <tr th:each="cart : ${items}">
+            	<td th:text="${cart.id}">#</td>
+                <td th:text="${cart.itemName}">Item Name</td>
+                <td th:text="${cart.price}">Price</td>
+              
+                <td>
+                	<a th:href="@{/delete_cart_item/{id}(id=${cart.id})}">Delete Item</a>
+                </td>
+            </tr>
+            
+        </tbody>
+    </table>
+    <table border="1" cellpadding="10">
+        <thead>
+            <tr>
+                <th>Total Price</th>
+            </tr>
+        </thead>
+        <tbody>
+        	<td th:text="${user.cost}">#</td>
+        </tbody>
+    </table>
+		<div align="center">
+		<h2>Your Information</h2>
+		<span>Full name:</span><span th:text="${user.name}"></span><br/>
+		<span>E-mail:</span><span th:text="${user.email}"></span><br/>
+		<span>PhoneNumber:</span><span th:text="${user.phone}"></span><br/>
+		<h2>Your Order Has Been Confirmed!</h2>
+		
+</div>
+		
+	</div>
+	
+	
+
+</body>
+</html>

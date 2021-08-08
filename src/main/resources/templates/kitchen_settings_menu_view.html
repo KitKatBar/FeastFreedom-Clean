@@ -1,0 +1,27 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+<meta charset="ISO-8859-1">
+<title>Register Here</title>
+<link rel="stylesheet" type="text/css" th:href="@{/css/header.css}" />
+</head>
+<body>
+	<div class="topnav">
+		<a class="active" th:href="@{/kitchen_settings}">Home Settings</a> <a
+			th:href="@{/edit_menu}">Edit Menu</a> <a href="#kitchen"><span
+			th:text="${kitchen.name}"></span></a>
+			<div sec:authorize="isAuthenticated()"><a th:href="@{/logout}">Logout</a></div>
+	</div>
+	<h1>Kitchen Menu</h1>
+		<table>
+		<tr>Menu Items</tr>
+		<tr th:each="menu : ${items}">
+		
+		<td>Item Name: </td><td><a th:text ="${menu.itemName}"></a></td>
+	  	<td>Veg: </td><td><a th:text ="${menu.veg}"></a></td>
+	  	<td>Price: </td><td><a th:text ="${menu.price}"></a></td>
+		</tr>
+		</table>
+		<a href="/kitchen_settings"><button type="button">Go Back</button></a>
+</body>
+</html>
