@@ -20,12 +20,13 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import com.example.demo.entity.CartItem;
+import com.example.demo.entity.Role;
 import com.example.demo.entity.User;
 import com.example.demo.repo.UserRepo;
 
 @Service
 @Transactional
-public class UserService {
+public class UserService implements UserDetailsService {
 
 	@Autowired
 	private UserRepo uRepo;
@@ -92,12 +93,12 @@ public class UserService {
         user.setRoles(Arrays.asList(new Role("ROLE_USER")));
         return repo.save(user);
     }
-	
+	*/
 	@Override
 	public UserDetails loadUserByUsername(String email) throws UsernameNotFoundException {
 		System.out.println("loading user");
-        User user = repo.findByEmail(email);
-        if(user ==null)
+        User user = uRepo.findByEmail(email);
+        if(user == null)
         	throw new UsernameNotFoundException("Invalid username or password.");
         return new org.springframework.security.core.userdetails.User(user.getEmail(),
 				user.getPassword(),
@@ -108,5 +109,5 @@ public class UserService {
 		return roles.stream()
 				.map(role -> new SimpleGrantedAuthority(role.getName()))
 				.collect(Collectors.toList());
-	}*/
+	}
 }

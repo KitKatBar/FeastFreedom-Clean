@@ -6,7 +6,7 @@ import org.springframework.security.core.userdetails.UserDetailsService;
 
 import com.example.demo.entity.Kitchen;
 
-public interface KitchenService {
+public interface KitchenService extends UserDetailsService {
 
 	public Kitchen findByEmail(String email);
 	public Kitchen findKitchen(Long id);

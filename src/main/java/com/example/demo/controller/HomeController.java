@@ -5,12 +5,17 @@ import java.util.List;
 import javax.validation.Valid;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.web.servlet.error.ErrorController;
+import org.springframework.security.authentication.AnonymousAuthenticationToken;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import com.example.demo.dto.KitchenDto;
@@ -22,7 +27,7 @@ import com.example.demo.service.KitchenServiceImpl;
 import com.example.demo.service.UserService;
 
 @Controller
-public class HomeController {
+public class HomeController implements ErrorController {
 
 	@Autowired
 	AuthenticationService aService;
@@ -49,11 +54,16 @@ public class HomeController {
     
     @GetMapping("/kitchen_login")
     public String kitchenLogin(Model model) {
-    	Kitchen k = new Kitchen();
-    	model.addAttribute("kitchen", k);
+    	
+    	Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+        if (authentication == null || authentication instanceof AnonymousAuthenticationToken) {
+            return "kitchen_login";
+        }
+    	//Kitchen k = new Kitchen();
+    	//model.addAttribute("kitchen", k);
     	//System.out.println("email: " + k.getEmail());
     	//System.out.println("pass: " + k.getPassword());
-        return "kitchen_login";
+        return "redirect:/kitchen_settings";
     }
     
     // Don't think these do anything
@@ -121,9 +131,15 @@ public class HomeController {
     
     @GetMapping("/user_login")
     public String userLogin(Model model) {
-		User u = new User();
-		model.addAttribute("user", u);
-		return "user_login";
+    	
+    	Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+        if (authentication == null || authentication instanceof AnonymousAuthenticationToken) {
+            return "user_login";
+        }
+        
+		//User u = new User();
+		//model.addAttribute("user", u);
+		return "redirect:/user_homepage";
 	}
     
     // Don't think these do anything
@@ -164,4 +180,10 @@ public class HomeController {
 			return "redirect:/?success";
 		}
 	}
+	
+	@RequestMapping("/error")
+    public String handleError() {
+        //do something like logging
+        return "error";
+    }
 }

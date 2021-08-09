@@ -16,6 +16,7 @@ import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import com.example.demo.entity.Kitchen;
+import com.example.demo.entity.Role;
 import com.example.demo.repo.KitchenRepo;
 
 @Service
@@ -106,7 +107,7 @@ public class KitchenServiceImpl implements KitchenService {
         user.setRoles(Arrays.asList(new Role("ROLE_KITCHEN")));
         return kRepo.save(user);
     }
-	
+	*/
 	@Override
 	public UserDetails loadUserByUsername(String email) throws UsernameNotFoundException {
 		System.out.println("loading kitchen");
@@ -125,5 +126,5 @@ public class KitchenServiceImpl implements KitchenService {
 		return roles.stream()
 				.map(role -> new SimpleGrantedAuthority(role.getName()))
 				.collect(Collectors.toList());
-	}*/
+	}
 }

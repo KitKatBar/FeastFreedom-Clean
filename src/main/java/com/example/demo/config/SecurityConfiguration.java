@@ -14,16 +14,29 @@ import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.web.util.matcher.AntPathRequestMatcher;
 
+import com.example.demo.service.AuthenticationService;
+import com.example.demo.service.KitchenServiceImpl;
+import com.example.demo.service.UserService;
+
 @Configuration
 @EnableWebSecurity
 public class SecurityConfiguration extends WebSecurityConfigurerAdapter {
 	
-	@Autowired
-	UserDetailsService userDetailsService;
+	//@Autowired
+	//UserDetailsService userDetailsService;
+	
+	//@Autowired
+	//private UserDetailsService aService;
 	
 	@Autowired
-	private UserDetailsService aService;
+	AuthenticationService aService;
 	
+	@Autowired
+	KitchenServiceImpl kService;
+	
+	@Autowired
+	UserService uService;
+	/*
 	@Override
 	protected void configure(HttpSecurity http) throws Exception {
 		//System.out.println("configure order 1");
@@ -40,7 +53,7 @@ public class SecurityConfiguration extends WebSecurityConfigurerAdapter {
 						"/img/**",
 						"/webjars/**").permitAll()
 					.anyRequest().authenticated()
-			/*.and()
+			.and()
 				.authorizeRequests()
 					.antMatchers(
 								"/",
@@ -61,7 +74,7 @@ public class SecurityConfiguration extends WebSecurityConfigurerAdapter {
 								"/css/**",
 								"/img/**",
 								"/webjars/**").permitAll()
-					.anyRequest().hasRole("USER")*/
+					.anyRequest().hasRole("USER")
 			.and()	
 				.formLogin()
 					.defaultSuccessUrl("/default")
@@ -76,8 +89,8 @@ public class SecurityConfiguration extends WebSecurityConfigurerAdapter {
 				.permitAll()
 			.and()
 				.csrf().disable();
-	}
-	/*
+	}*/
+	
 	@Configuration
 	@Order(1)
 	public static class KitchenConfiguration extends WebSecurityConfigurerAdapter {
@@ -92,21 +105,34 @@ public class SecurityConfiguration extends WebSecurityConfigurerAdapter {
 		// etc
 		@Override
 		protected void configure(HttpSecurity http) throws Exception {
-			//System.out.println("configure order 1");
-			http.authorizeRequests()
+			System.out.println("configure order 1");
+			http//.requestMatcher(new AntPathRequestMatcher("/"))
+			.requestMatcher(new AntPathRequestMatcher("/kitchen_login"))
+			.authorizeRequests()
 					.antMatchers(
 							"/",
-							"/kitchen*",
+							"/kitchen**",
 							"/kitchen_registration",
 							"/registration**",
 							"/js/**",
 							"/css/**",
 							"/img/**",
 							"/webjars/**").permitAll()
-					.anyRequest().hasRole("KITCHEN")
+					//.anyRequest().hasRole("KITCHEN")
+				.and()
+					.authorizeRequests()
+						.antMatchers(
+								"/kitchen_settings",
+								"/list_kitchens",
+								"/edit_menu",
+								"/add_menu_item",
+								"/view_menu",
+								"/edit_item/**",
+								"/delete_item/**")
+						.access("hasRole('ROLE_KITCHEN')")
 				.and()
 					.formLogin()
-						.failureUrl("/kitchen_login?error")
+						//.failureUrl("/kitchen_login?error")
 						.defaultSuccessUrl("/kitchen_settings")
 						.loginPage("/kitchen_login")
 					.permitAll()
@@ -116,26 +142,14 @@ public class SecurityConfiguration extends WebSecurityConfigurerAdapter {
 						.clearAuthentication(true)
 						.logoutRequestMatcher(new AntPathRequestMatcher("/logout"))
 						.logoutSuccessUrl("/?logout")
-					.permitAll();
+					.permitAll()
+				//.and()
+					//.exceptionHandling().accessDeniedPage("/403")
+				.and()
+					.csrf().disable();
 		}
-		
-		/*@Bean
-		public DaoAuthenticationProvider authencationProviderKitchen() {
-			System.out.println("in kitchen auth");
-			DaoAuthenticationProvider auth = new DaoAuthenticationProvider();
-			auth.setUserDetailsService(kitchenService);
-			auth.setPasswordEncoder(passwordEncoder());
-			return auth;
-		}
-		
-		@Override
-		protected void configure(AuthenticationManagerBuilder auth) {
-			System.out.println("in auth configure");
-			auth
-				.authenticationProvider(authencationProviderKitchen());
-		}*//*
 	}
-	/*
+	
 	@Configuration
 	@Order(2)
 	public static class UserConfiguration extends WebSecurityConfigurerAdapter {
@@ -148,17 +162,32 @@ public class SecurityConfiguration extends WebSecurityConfigurerAdapter {
 		
 		@Override
 		protected void configure(HttpSecurity http) throws Exception {
-			http.authorizeRequests()
+			System.out.println("configure order 2");
+			http//.requestMatcher(new AntPathRequestMatcher("/user_login"))
+			.authorizeRequests()
 					.antMatchers(
 							"/",
-							"/user*",
+							"/user**",
+							"/kitchen_registration",
 							"/user_registration",
 							"/registration**",
 							"/js/**",
 							"/css/**",
 							"/img/**",
 							"/webiars/**").permitAll()
-					.anyRequest().hasRole("USER")
+					//.anyRequest().hasRole("USER")
+				.and()
+					.authorizeRequests()
+						.antMatchers(
+								"/user_homepage",
+								"/user_order_kitchen",
+								"/user_order_kitchen/**",
+								"/user_order_menu",
+								"/user_view_cart",
+								"/add_cart_item/**",
+								"/delete_cart_item/**",
+								"/user_confirm")
+						.access("hasRole('ROLE_USER')")
 				.and()
 					.formLogin()
 						.failureUrl("/user_login?error")
@@ -171,43 +200,29 @@ public class SecurityConfiguration extends WebSecurityConfigurerAdapter {
 						.clearAuthentication(true)
 						.logoutRequestMatcher(new AntPathRequestMatcher("/logout"))
 						.logoutSuccessUrl("/?logout")
-					.permitAll();
+					.permitAll()
+				//.and()
+					//.exceptionHandling().accessDeniedPage("/403")
+				.and()
+					.csrf().disable();
 		}
-		
-		/*@Bean
-		public DaoAuthenticationProvider authencationProviderUser() {
-			System.out.println("in user auth");
-			DaoAuthenticationProvider auth = new DaoAuthenticationProvider();
-			auth.setUserDetailsService(userService);
-			auth.setPasswordEncoder(passwordEncoder());
-			return auth;
-		}
-		
-		@Override
-		protected void configure(AuthenticationManagerBuilder auth) {
-			System.out.println("in auth configure");
-			auth
-				.authenticationProvider(authencationProviderUser());
-		}*//*
 	}
-	*/
+	
 	@Bean
 	public BCryptPasswordEncoder passwordEncoder() {
 		return new BCryptPasswordEncoder();
 	}
 	
 	@Bean
-	public DaoAuthenticationProvider authencationProvider() {
-		//System.out.println("in kitchen auth");
+	public DaoAuthenticationProvider authencationProviderKitchen() {
 		DaoAuthenticationProvider auth = new DaoAuthenticationProvider();
 		auth.setUserDetailsService(aService);
 		auth.setPasswordEncoder(passwordEncoder());
 		return auth;
 	}
-	
-	/*@Bean
+/*
+	@Bean
 	public DaoAuthenticationProvider authencationProviderUser() {
-		System.out.println("in user auth");
 		DaoAuthenticationProvider auth = new DaoAuthenticationProvider();
 		auth.setUserDetailsService(uService);
 		auth.setPasswordEncoder(passwordEncoder());
@@ -216,7 +231,7 @@ public class SecurityConfiguration extends WebSecurityConfigurerAdapter {
 	
 	@Override
 	protected void configure(AuthenticationManagerBuilder auth) {
-		//System.out.println("in auth configure");
-		auth.authenticationProvider(authencationProvider());
+		auth.authenticationProvider(authencationProviderKitchen());
+		//auth.authenticationProvider(authencationProviderUser());
 	}
 }

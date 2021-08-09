@@ -63,6 +63,12 @@ public class AuthenticationService implements UserDetailsService {
 		//System.out.println("loading kitchen");
 		//System.out.println("email is: " + email);
 		Kitchen kitchen = kRepo.findByEmail(email);
+		User user = uRepo.findByEmail(email);
+		
+		if ((kitchen == null) & (user == null)) {
+			throw new UsernameNotFoundException("Invalid username or password.");
+		}
+		/*
 		if (kitchen == null ) {
 			User user = uRepo.findByEmail(email);
 			if (user == null) {
@@ -78,6 +84,35 @@ public class AuthenticationService implements UserDetailsService {
 		return new org.springframework.security.core.userdetails.User(kitchen.getEmail(),
 				kitchen.getPassword(),
 				mapRolesToAuthorities(kitchen.getRoles()));
+				*/
+		else if ((kitchen != null) && (user != null)) {
+			try {
+				return new org.springframework.security.core.userdetails.User(kitchen.getEmail(),
+						kitchen.getPassword(),
+						mapRolesToAuthorities(kitchen.getRoles()));	
+			} catch (UsernameNotFoundException e) {
+				return new org.springframework.security.core.userdetails.User(user.getEmail(),
+						user.getPassword(),
+						mapRolesToAuthorities(user.getRoles()));
+			}
+			//throw new UsernameNotFoundException("Invalid username or password.");
+		}
+		
+		else if ((kitchen != null) && (user == null)) {
+			return new org.springframework.security.core.userdetails.User(kitchen.getEmail(),
+					kitchen.getPassword(),
+					mapRolesToAuthorities(kitchen.getRoles()));
+		}
+		
+		else if ((user != null) && (kitchen == null)) {
+			return new org.springframework.security.core.userdetails.User(user.getEmail(),
+					user.getPassword(),
+					mapRolesToAuthorities(user.getRoles()));
+		}
+		
+		else {
+			throw new UsernameNotFoundException("Invalid username or password.");
+		}
 	}
 
 	private Collection<? extends GrantedAuthority> mapRolesToAuthorities(Collection<Role> roles) {
